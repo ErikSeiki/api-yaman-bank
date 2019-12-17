@@ -36,7 +36,7 @@ public class ProdutoFinanceiro implements Serializable {
 
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "FK_AGENCIA", referencedColumnName = "AGENCIA", nullable = false),
-			@JoinColumn(name = "FK_NUMERO_CONTAD", referencedColumnName = "NUMERO_CONTA", nullable = false) })
+			@JoinColumn(name = "FK_NUMERO_CONTA", referencedColumnName = "NUMERO_CONTA", nullable = false) })
 	private Conta conta;
 
 	@ManyToOne
