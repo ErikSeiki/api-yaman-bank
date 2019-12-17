@@ -1,4 +1,4 @@
-package br.com.yaman.bank.entities;
+package br.com.yaman.bank.entity;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,22 +16,31 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="TIPO_PRODUTO_FINANCEIRO")
+@Table(name="CLIENTE")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TipoProdutoFinanceiro implements Serializable {
-	
+public class Cliente implements Serializable{
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "TIPO_PRODUTO_FINANCEIRO_ID")
-	private Integer tipoProdutoFinanceiroId;
+	@Column(name = "CLIENTE_ID")
+	private Integer clienteId;
 	
-	@Column(name = "DESCRICAO",  nullable = false)
-	private String descricao;
+	@Column(name = "NOME",  nullable = false)
+	private String nome;
 	
-	@OneToMany(mappedBy = "tipoProdutoFinanceiro")
-	private List<ProdutoFinanceiro> produtosFinanceiros;
+	@Column(name = "CPF",  nullable = false)
+	private String cpf;
+	
+	@Column(name = "EMAIL")
+	private String email;
+	
+	@Column(name = "ENDERECO",  nullable = false)
+	private String endereco;
+	
+	@OneToMany(mappedBy = "cliente")
+	private List<Conta> contas;
 }

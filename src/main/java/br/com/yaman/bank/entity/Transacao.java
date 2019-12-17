@@ -1,4 +1,4 @@
-package br.com.yaman.bank.entities;
+package br.com.yaman.bank.entity;
 
 import java.io.Serializable;
 import java.util.Date;
