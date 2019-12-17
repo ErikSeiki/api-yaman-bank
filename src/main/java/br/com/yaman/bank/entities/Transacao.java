@@ -1,5 +1,6 @@
 package br.com.yaman.bank.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -11,9 +12,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name = "TRANSACAO")
-public class Transacao {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Transacao implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "TRANSACAO_ID")
@@ -26,9 +37,10 @@ public class Transacao {
 	private String descricao;
 
 	@Column(name = "VALOR", nullable = false)
-
+	private Float valor;
+	
 	@ManyToOne
-	@JoinColumn(name = "PRODUTO_FINANCEIRO_ID", referencedColumnName = "FK_PRODUTO_FINANCEIRO_ID", nullable = false)
+	@JoinColumn(name = "FK_PRODUTO_FINANCEIRO_ID", referencedColumnName = "PRODUTO_FINANCEIRO_ID", nullable = false)
 	private ProdutoFinanceiro produtoFinanceiro;
 
 }

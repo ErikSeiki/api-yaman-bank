@@ -1,5 +1,6 @@
 package br.com.yaman.bank.entities;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -10,10 +11,19 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity
 @Table(name="CLIENTE")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Cliente implements Serializable{
 
-public class Cliente {
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "CLIENTE_ID")
@@ -31,6 +41,6 @@ public class Cliente {
 	@Column(name = "ENDERECO",  nullable = false)
 	private String endereco;
 	
-	@OneToMany(mappedBy = "client")
+	@OneToMany(mappedBy = "cliente")
 	private List<Conta> contas;
 }
