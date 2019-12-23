@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.yaman.bank.DTO.ParamSacarDTO;
-import br.com.yaman.bank.entity.ProdutoFinanceiro;
 import br.com.yaman.bank.exception.ProdutoFinanceiroException;
 import br.com.yaman.bank.service.ProdutoFinanceiroService;
 
