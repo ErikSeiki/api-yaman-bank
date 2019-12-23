@@ -11,8 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 public class HandlerException {
 
 	@ExceptionHandler({NotFoundException.class})
-	public ResponseEntity<String> NotFoundHandler() {
+	public ResponseEntity<String> NotFoundHandler(NotFoundException e) {
 		log.error("Não encontrado!");
-		return ResponseEntity.badRequest().body("Conta não encontrada!");
+		//return ResponseEntity.badRequest().body("Conta não encontrada!");
+		return ResponseEntity.badRequest().body(e.getMessage());
 	}
 }
