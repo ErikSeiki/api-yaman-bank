@@ -47,7 +47,7 @@ public class ProdutoFinanceiroService {
 			produtoFinanceiroRepository.save(produtoFinanceiro);
 			return MESAGEM_SUCESSO + produtoFinanceiro.getValor();
 		}*/
-		throw new ProdutoFinanceiroException("Tipo de conta invalido");
+		throw new ProdutoFinanceiroException("Tipo produto financeiro não configurado");
 	}
 	
 	public void descontarValor(ProdutoFinanceiro produtoFinanceiro, float valorSaque) throws ProdutoFinanceiroException {
