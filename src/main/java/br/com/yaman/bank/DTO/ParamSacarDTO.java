@@ -13,7 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ParamSacarDTO {
-	@JsonAlias("codigoProduto")
-	private Integer produtoFinanceiroId;
+	private Integer numeroConta;
+	private Integer agencia;
+	private Integer tipoProdutoFinanceiro;
 	private float valorDoSaque;
 }

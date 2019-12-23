@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.yaman.bank.DTO.ParamDepositarDTO;
 import br.com.yaman.bank.DTO.ParamSacarDTO;
 import br.com.yaman.bank.entity.ProdutoFinanceiro;
 import br.com.yaman.bank.exception.ProdutoFinanceiroException;
@@ -39,6 +40,11 @@ public class BankController {
 	public ResponseEntity<Float> exibirSaldoCorrente(@RequestParam Integer numeroConta, Integer agencia) throws Exception{
 		ProdutoFinanceiro produto = produtoFinanceiroService.buscarCorrente(numeroConta, agencia);
 		return ResponseEntity.ok(produto.getValor());
+	}
+	
+	@PostMapping(value = "depositar")
+	public ResponseEntity<String> depositar(@RequestBody ParamDepositarDTO parametros) throws ProdutoFinanceiroException {
+		return ResponseEntity.ok(produtoFinanceiroService.depositar(parametros));
 	}
 	
 	@PostMapping (value = "sacar")

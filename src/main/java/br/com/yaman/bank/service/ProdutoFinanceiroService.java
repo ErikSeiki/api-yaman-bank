@@ -3,6 +3,7 @@ package br.com.yaman.bank.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.yaman.bank.DTO.ParamDepositarDTO;
 import br.com.yaman.bank.DTO.ParamSacarDTO;
 import br.com.yaman.bank.conta.TipoProdutoFinanceiro;
 import br.com.yaman.bank.entity.ProdutoFinanceiro;
@@ -12,33 +13,31 @@ import br.com.yaman.bank.repository.ProdutoFinanceiroRepository;
 
 @Service
 public class ProdutoFinanceiroService {
-	
+
 	private static final String MESAGEM_SUCESSO =  "Saque sucedido, você possui: ";
 	
 	@Autowired
 	private ProdutoFinanceiroRepository produtoFinanceiroRepository;
 	
 	
-	public String sacar(ParamSacarDTO parametro) throws ProdutoFinanceiroException {
+	public String sacar(ParamSacarDTO parametros) throws ProdutoFinanceiroException {
 		
-		ProdutoFinanceiro produtoFinanceiro = produtoFinanceiroRepository.findById(parametro.getProdutoFinanceiroId()).orElse(null);
-		
-		float valorDoSaque = parametro.getValorDoSaque();
-		
-		if(produtoFinanceiro == null) {
-			throw new ProdutoFinanceiroException("Produto financeiro invalido");
-		}
-		
+		Integer numeroConta = parametros.getNumeroConta();
+		Integer agencia = parametros.getAgencia();
+		Integer tipoProdutoFinanceiro = parametros.getTipoProdutoFinanceiro();
+		float valorDoSaque = parametros.getValorDoSaque();
+		ProdutoFinanceiro produto = produtoFinanceiroRepository.buscarProdutoFinanceiro(agencia, numeroConta, tipoProdutoFinanceiro);
+			
 		if(valorDoSaque <= 0) {
 			throw new ProdutoFinanceiroException("Valor invalido");
 		}
 		
-		if(produtoFinanceiro.getTipoProdutoFinanceiro().getTipoProdutoFinanceiroId() == TipoProdutoFinanceiro.CONTA_POUPANCA.getCod() || 
-				produtoFinanceiro.getTipoProdutoFinanceiro().getTipoProdutoFinanceiroId() == TipoProdutoFinanceiro.CONTA_CORRENTE.getCod()	) {
+		if(tipoProdutoFinanceiro == TipoProdutoFinanceiro.CONTA_POUPANCA.getCod() || 
+				tipoProdutoFinanceiro == TipoProdutoFinanceiro.CONTA_CORRENTE.getCod()	) {
 		
-			this.descontarValor(produtoFinanceiro, valorDoSaque);
-			produtoFinanceiroRepository.save(produtoFinanceiro);
-			return MESAGEM_SUCESSO + produtoFinanceiro.getValor();
+			this.descontarValor(produto, valorDoSaque);
+			produtoFinanceiroRepository.save(produto);
+			return MESAGEM_SUCESSO + produto.getValor();
 		
 		}
 		
@@ -68,6 +67,25 @@ public class ProdutoFinanceiroService {
 			throw new NotFoundException("Essa conta não possui um(a) " + tipoProdutoFinanceiro.getDescricao());
 
 		return produto;
+	}
+
+	public String depositar(ParamDepositarDTO parametros) throws ProdutoFinanceiroException {
+		Integer numeroConta = parametros.getNumeroConta();
+		Integer agencia = parametros.getAgencia();
+		Integer tipoProdutoFinanceiro = parametros.getTipoProdutoFinanceiro();
+		float valorDoDeposito = parametros.getValorDoDeposito();
+		ProdutoFinanceiro produto = produtoFinanceiroRepository.buscarProdutoFinanceiro(agencia, numeroConta, tipoProdutoFinanceiro);
+		
+		if(valorDoDeposito <= 0) {
+			throw new ProdutoFinanceiroException("Valor invalido");
+		}
+		
+		else {
+			produto.setValor(produto.getValor() + valorDoDeposito);
+			produtoFinanceiroRepository.save(produto);
+			return "Deposito sucedido! Você possui: " + produto.getValor();
+		}
+		
 	}
 	
 }
