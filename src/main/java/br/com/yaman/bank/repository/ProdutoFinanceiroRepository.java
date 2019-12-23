@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import br.com.yaman.bank.entity.ProdutoFinanceiro;
+import br.com.yaman.bank.entity.TipoProdutoFinanceiro;
 
 @Repository
 public interface ProdutoFinanceiroRepository extends JpaRepository<ProdutoFinanceiro, Integer> {
