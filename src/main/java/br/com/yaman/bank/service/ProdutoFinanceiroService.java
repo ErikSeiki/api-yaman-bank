@@ -35,58 +35,31 @@ public class ProdutoFinanceiroService {
 		
 		if(produtoFinanceiro.getTipoProdutoFinanceiro().getTipoProdutoFinanceiroId() == TipoProdutoFinanceiro.CONTA_POUPANCA.getCod() || 
 				produtoFinanceiro.getTipoProdutoFinanceiro().getTipoProdutoFinanceiroId() == TipoProdutoFinanceiro.CONTA_CORRENTE.getCod()	) {
-			//produtoFinanceiro = this.descontarValor(produtoFinanceiro, valorDoSaque);
+		
 			this.descontarValor(produtoFinanceiro, valorDoSaque);
 			produtoFinanceiroRepository.save(produtoFinanceiro);
 			return MESAGEM_SUCESSO + produtoFinanceiro.getValor();
+		
 		}
-		/*
-		else if(produtoFinanceiro.getTipoProdutoFinanceiro().getTipoProdutoFinanceiroId() == 2) {
-			//produtoFinanceiro = this.descontarValor(produtoFinanceiro, valorDoSaque);
-			this.descontarValor(produtoFinanceiro, valorDoSaque);
-			produtoFinanceiroRepository.save(produtoFinanceiro);
-			return MESAGEM_SUCESSO + produtoFinanceiro.getValor();
-		}*/
+		
 		throw new ProdutoFinanceiroException("Tipo produto financeiro não configurado");
 	}
 	
 	public void descontarValor(ProdutoFinanceiro produtoFinanceiro, float valorSaque) throws ProdutoFinanceiroException {
+		
 		if(produtoFinanceiro.getValor() >= valorSaque) {
 			produtoFinanceiro.setValor(produtoFinanceiro.getValor() - valorSaque);
 		}else {
 			throw new ProdutoFinanceiroException("Valor superior ao saldo, você possui: " +  produtoFinanceiro.getValor());
 		}
-	};
-	
+	}
 	
 	public ProdutoFinanceiro buscarPoupanca(Integer numeroConta, Integer agencia) throws Exception  {
-		/*
-		List<ProdutoFinanceiro> produtos = this.buscarProdutosFinanceiros(numeroConta, agencia);
-		for(ProdutoFinanceiro produto : produtos) {
-			if (produto.getTipoProdutoFinanceiro().getTipoProdutoFinanceiroId() == TipoProdutoFinanceiro.CONTA_POUPANCA.getCod()) {
-				return produto;
-			}	
-		}
-		
-		throw new NotFoundException("Essa conta não possui uma Conta Poupança");
-		*/
-		
 		return buscarProdutoFinanceiro(numeroConta, agencia,TipoProdutoFinanceiro.CONTA_POUPANCA);
 	}
 	
 	public ProdutoFinanceiro buscarCorrente(Integer numeroConta, Integer agencia) throws Exception {
-		/*
-		List<ProdutoFinanceiro> produtos = this.buscarProdutosFinanceiros(numeroConta, agencia);
-		for(ProdutoFinanceiro produto : produtos) {
-			if (produto.getTipoProdutoFinanceiro().getTipoProdutoFinanceiroId() == TipoProdutoFinanceiro.CONTA_CORRENTE.getCod()) {
-				return produto;
-			}	
-		}
-		
-		return null;*/
-		
 		return buscarProdutoFinanceiro(numeroConta, agencia,TipoProdutoFinanceiro.CONTA_CORRENTE);
-		
 	}
 
 	private ProdutoFinanceiro buscarProdutoFinanceiro(Integer numeroConta, Integer agencia , TipoProdutoFinanceiro tipoProdutoFinanceiro) throws NotFoundException {
