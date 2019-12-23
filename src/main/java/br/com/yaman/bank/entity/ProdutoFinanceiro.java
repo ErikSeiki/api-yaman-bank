@@ -45,4 +45,5 @@ public class ProdutoFinanceiro implements Serializable {
 	
 	@OneToMany(mappedBy = "produtoFinanceiro")
 	private List<Transacao> transacoes;
+	
 }
