@@ -39,8 +39,6 @@ public class ProdutoFinanceiroService {
 			return MESAGEM_SUCESSO + produto.getValor();
 		
 		}
-		
-		
 	}
 	
 	private void descontarValor(ProdutoFinanceiro produtoFinanceiro, float valorSaque) throws ProdutoFinanceiroException {
@@ -83,7 +81,7 @@ public class ProdutoFinanceiroService {
 		Integer tipoProdutoFinanceiro = parametros.getTipoProdutoFinanceiro();
 		float valorDoDeposito = parametros.getValorDoDeposito();
 		
-		ProdutoFinanceiro produto = this.buscarProdutoFinanceiro(agencia, numeroConta, tipoProdutoFinanceiro);
+		ProdutoFinanceiro produto = this.buscarProdutoFinanceiro(numeroConta, agencia, tipoProdutoFinanceiro);
 		
 		if(valorDoDeposito <= 0) {
 			throw new ProdutoFinanceiroException("Valor invalido");
