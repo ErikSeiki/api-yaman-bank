@@ -12,7 +12,7 @@ import br.com.yaman.bank.entity.TipoProdutoFinanceiro;
 public interface ProdutoFinanceiroRepository extends JpaRepository<ProdutoFinanceiro, Integer> {
 	
 	@Query("select p from ProdutoFinanceiro p where p.conta.contaPk.agencia = :agencia and p.conta.contaPk.numeroConta = :conta and p.tipoProdutoFinanceiro.tipoProdutoFinanceiroId = :tipoProdutoFinanceiroId")
-	public ProdutoFinanceiro buscarProdutoFinanceiro(@Param("agencia") Integer agencia,@Param("conta") Integer numeroConta, @Param("tipoProdutoFinanceiroId") Integer tipoProdutoFinanceiroId);
+	public ProdutoFinanceiro buscarProdutoFinanceiro(@Param("agencia") Integer agencia,@Param("conta") Integer numeroConta, @Param("tipoProdutoFinanceiroId") Integer tipoProdutoFinanceiro);
 	
 	public ProdutoFinanceiro findByTipoProdutoFinanceiro(TipoProdutoFinanceiro tipoProdutoFinanceiro);
 }

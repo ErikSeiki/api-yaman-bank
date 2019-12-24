@@ -33,16 +33,14 @@ public class ProdutoFinanceiroService {
 			throw new ProdutoFinanceiroException("Valor invalido");
 		}
 		
-		if(tipoProdutoFinanceiro == TipoProdutoFinanceiro.CONTA_POUPANCA.getCod() || 
-				tipoProdutoFinanceiro == TipoProdutoFinanceiro.CONTA_CORRENTE.getCod()	) {
-		
+		else {
 			this.descontarValor(produto, valorDoSaque);
 			produtoFinanceiroRepository.save(produto);
 			return MESAGEM_SUCESSO + produto.getValor();
 		
 		}
 		
-		throw new ProdutoFinanceiroException("Tipo produto financeiro não configurado");
+		
 	}
 	
 	private void descontarValor(ProdutoFinanceiro produtoFinanceiro, float valorSaque) throws ProdutoFinanceiroException {
@@ -54,20 +52,29 @@ public class ProdutoFinanceiroService {
 		}
 	}
 	
-	public ProdutoFinanceiro buscarPoupanca(Integer numeroConta, Integer agencia) throws NotFoundException   {
-		return buscarProdutoFinanceiro(numeroConta, agencia,TipoProdutoFinanceiro.CONTA_POUPANCA);
+	public ProdutoFinanceiro buscarPoupanca(Integer numeroConta, Integer agencia) throws NotFoundException, ProdutoFinanceiroException   {
+		return buscarProdutoFinanceiro(numeroConta, agencia,TipoProdutoFinanceiro.CONTA_POUPANCA.getCod());
 	}
 	
-	public ProdutoFinanceiro buscarCorrente(Integer numeroConta, Integer agencia) throws NotFoundException  {
-		return buscarProdutoFinanceiro(numeroConta, agencia,TipoProdutoFinanceiro.CONTA_CORRENTE);
+	public ProdutoFinanceiro buscarCorrente(Integer numeroConta, Integer agencia) throws NotFoundException, ProdutoFinanceiroException  {
+		return buscarProdutoFinanceiro(numeroConta, agencia,TipoProdutoFinanceiro.CONTA_CORRENTE.getCod());
 	}
 
-	private ProdutoFinanceiro buscarProdutoFinanceiro(Integer numeroConta, Integer agencia , TipoProdutoFinanceiro tipoProdutoFinanceiro) throws NotFoundException {
-		ProdutoFinanceiro produto = produtoFinanceiroRepository.buscarProdutoFinanceiro(agencia, numeroConta,tipoProdutoFinanceiro.getCod());
-		if(produto==null)
-			throw new NotFoundException("Essa conta não possui um(a) " + tipoProdutoFinanceiro.getDescricao());
-
-		return produto;
+	private ProdutoFinanceiro buscarProdutoFinanceiro(Integer numeroConta, Integer agencia , Integer tipoProdutoFinanceiro) throws NotFoundException, ProdutoFinanceiroException {
+		
+		if(numeroConta == null || agencia == null || tipoProdutoFinanceiro == null) {
+			throw new NotFoundException("Informações de conta ou de Tipo Produto Financeiro inválidos.");
+		}
+		
+		if (tipoProdutoFinanceiro == TipoProdutoFinanceiro.CONTA_POUPANCA.getCod() || 
+				tipoProdutoFinanceiro == TipoProdutoFinanceiro.CONTA_CORRENTE.getCod()) {
+			ProdutoFinanceiro produto = produtoFinanceiroRepository.buscarProdutoFinanceiro(agencia, numeroConta, tipoProdutoFinanceiro);
+			return produto;
+		}
+		
+		throw new ProdutoFinanceiroException("Tipo produto financeiro não configurado");
+		
+		
 	}
 
 	public String depositar(ParamDepositarDTO parametros) throws ProdutoFinanceiroException, NotFoundException {
@@ -76,7 +83,7 @@ public class ProdutoFinanceiroService {
 		Integer tipoProdutoFinanceiro = parametros.getTipoProdutoFinanceiro();
 		float valorDoDeposito = parametros.getValorDoDeposito();
 		
-		ProdutoFinanceiro produto = produtoFinanceiroRepository.buscarProdutoFinanceiro(agencia, numeroConta, tipoProdutoFinanceiro);
+		ProdutoFinanceiro produto = this.buscarProdutoFinanceiro(agencia, numeroConta, tipoProdutoFinanceiro);
 		
 		if(valorDoDeposito <= 0) {
 			throw new ProdutoFinanceiroException("Valor invalido");

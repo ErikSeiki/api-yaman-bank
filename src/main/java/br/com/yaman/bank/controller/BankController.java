@@ -31,14 +31,14 @@ public class BankController {
 	}
 	
 	@GetMapping(value = "buscar-saldo-poupanca")
-	public ResponseEntity<Float> exibirSaldoPoupanca(@RequestParam Integer numeroConta, Integer agencia) throws NotFoundException {
+	public ResponseEntity<Float> exibirSaldoPoupanca(@RequestParam Integer numeroConta, Integer agencia) throws NotFoundException, ProdutoFinanceiroException {
 		ProdutoFinanceiro produto = produtoFinanceiroService.buscarPoupanca(numeroConta, agencia);
 		return ResponseEntity.ok(produto.getValor());
 		
 	}
 	
 	@GetMapping(value = "buscar-saldo-corrente")
-	public ResponseEntity<Float> exibirSaldoCorrente(@RequestParam Integer numeroConta, Integer agencia) throws NotFoundException {
+	public ResponseEntity<Float> exibirSaldoCorrente(@RequestParam Integer numeroConta, Integer agencia) throws NotFoundException, ProdutoFinanceiroException {
 		ProdutoFinanceiro produto = produtoFinanceiroService.buscarCorrente(numeroConta, agencia);
 		return ResponseEntity.ok(produto.getValor());
 	}
