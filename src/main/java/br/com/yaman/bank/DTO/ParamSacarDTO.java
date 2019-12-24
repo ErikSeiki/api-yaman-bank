@@ -1,8 +1,6 @@
 package br.com.yaman.bank.DTO;
 
 
-import com.fasterxml.jackson.annotation.JsonAlias;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

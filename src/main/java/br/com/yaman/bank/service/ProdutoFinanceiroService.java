@@ -20,14 +20,15 @@ public class ProdutoFinanceiroService {
 	private ProdutoFinanceiroRepository produtoFinanceiroRepository;
 	
 	
-	public String sacar(ParamSacarDTO parametros) throws ProdutoFinanceiroException {
+	public String sacar(ParamSacarDTO parametros) throws ProdutoFinanceiroException, NotFoundException {
 		
 		Integer numeroConta = parametros.getNumeroConta();
 		Integer agencia = parametros.getAgencia();
 		Integer tipoProdutoFinanceiro = parametros.getTipoProdutoFinanceiro();
 		float valorDoSaque = parametros.getValorDoSaque();
+		
 		ProdutoFinanceiro produto = produtoFinanceiroRepository.buscarProdutoFinanceiro(agencia, numeroConta, tipoProdutoFinanceiro);
-			
+		
 		if(valorDoSaque <= 0) {
 			throw new ProdutoFinanceiroException("Valor invalido");
 		}
@@ -44,7 +45,7 @@ public class ProdutoFinanceiroService {
 		throw new ProdutoFinanceiroException("Tipo produto financeiro não configurado");
 	}
 	
-	public void descontarValor(ProdutoFinanceiro produtoFinanceiro, float valorSaque) throws ProdutoFinanceiroException {
+	private void descontarValor(ProdutoFinanceiro produtoFinanceiro, float valorSaque) throws ProdutoFinanceiroException {
 		
 		if(produtoFinanceiro.getValor() >= valorSaque) {
 			produtoFinanceiro.setValor(produtoFinanceiro.getValor() - valorSaque);
@@ -53,11 +54,11 @@ public class ProdutoFinanceiroService {
 		}
 	}
 	
-	public ProdutoFinanceiro buscarPoupanca(Integer numeroConta, Integer agencia) throws Exception  {
+	public ProdutoFinanceiro buscarPoupanca(Integer numeroConta, Integer agencia) throws NotFoundException   {
 		return buscarProdutoFinanceiro(numeroConta, agencia,TipoProdutoFinanceiro.CONTA_POUPANCA);
 	}
 	
-	public ProdutoFinanceiro buscarCorrente(Integer numeroConta, Integer agencia) throws Exception {
+	public ProdutoFinanceiro buscarCorrente(Integer numeroConta, Integer agencia) throws NotFoundException  {
 		return buscarProdutoFinanceiro(numeroConta, agencia,TipoProdutoFinanceiro.CONTA_CORRENTE);
 	}
 
@@ -69,23 +70,21 @@ public class ProdutoFinanceiroService {
 		return produto;
 	}
 
-	public String depositar(ParamDepositarDTO parametros) throws ProdutoFinanceiroException {
+	public String depositar(ParamDepositarDTO parametros) throws ProdutoFinanceiroException, NotFoundException {
 		Integer numeroConta = parametros.getNumeroConta();
 		Integer agencia = parametros.getAgencia();
 		Integer tipoProdutoFinanceiro = parametros.getTipoProdutoFinanceiro();
 		float valorDoDeposito = parametros.getValorDoDeposito();
+		
 		ProdutoFinanceiro produto = produtoFinanceiroRepository.buscarProdutoFinanceiro(agencia, numeroConta, tipoProdutoFinanceiro);
 		
 		if(valorDoDeposito <= 0) {
 			throw new ProdutoFinanceiroException("Valor invalido");
 		}
 		
-		else {
-			produto.setValor(produto.getValor() + valorDoDeposito);
-			produtoFinanceiroRepository.save(produto);
-			return "Deposito sucedido! Você possui: " + produto.getValor();
-		}
-		
+		produto.setValor(produto.getValor() + valorDoDeposito);
+		produtoFinanceiroRepository.save(produto);
+		return "Deposito sucedido! Você possui: " + produto.getValor();
 	}
 	
 }
