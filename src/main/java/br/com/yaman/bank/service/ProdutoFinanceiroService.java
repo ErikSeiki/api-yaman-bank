@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import br.com.yaman.bank.DTO.ParamDepositarDTO;
 import br.com.yaman.bank.DTO.ParamSacarDTO;
+import br.com.yaman.bank.DTO.ParamTransferirDTO;
 import br.com.yaman.bank.conta.TipoProdutoFinanceiro;
 import br.com.yaman.bank.entity.ProdutoFinanceiro;
 import br.com.yaman.bank.exception.NotFoundException;
@@ -14,7 +15,7 @@ import br.com.yaman.bank.repository.ProdutoFinanceiroRepository;
 @Service
 public class ProdutoFinanceiroService {
 
-	private static final String MESAGEM_SUCESSO =  "Saque sucedido, você possui: ";
+	private static final String MESAGEM_SUCESSO =  "Transação realizada com sucesso, você possui: ";
 	
 	@Autowired
 	private ProdutoFinanceiroRepository produtoFinanceiroRepository;
@@ -38,6 +39,34 @@ public class ProdutoFinanceiroService {
 		
 	}
 	
+	public String transferir(ParamTransferirDTO parametros) throws ProdutoFinanceiroException, NotFoundException {
+
+		float valorDaTransferencia = parametros.getValorDaTransferencia();
+		
+		if(valorDaTransferencia <= 0) {
+			throw new ProdutoFinanceiroException("Valor invalido");
+		}
+		
+		ProdutoFinanceiro remetenteProdutoFinanceiro = this.buscarProdutoFinanceiro(parametros.getRemetenteNumeroConta(),parametros.getRemetenteAgencia(),parametros.getRemetenteTipoProdutoFinanceiro());
+		ProdutoFinanceiro destinatarioProdutoFinanceiro = this.buscarProdutoFinanceiro(parametros.getDestinatarioNumeroConta(),parametros.getDestinatarioAgencia(),parametros.getDestinatarioTipoProdutoFinanceiro());
+		
+		this.descontarValorComJuros(remetenteProdutoFinanceiro, valorDaTransferencia);
+		this.acrescentarValor(destinatarioProdutoFinanceiro, valorDaTransferencia );
+		produtoFinanceiroRepository.save(remetenteProdutoFinanceiro);
+		produtoFinanceiroRepository.save(destinatarioProdutoFinanceiro);
+		return MESAGEM_SUCESSO + remetenteProdutoFinanceiro.getValor();
+		
+	}
+	
+	private void descontarValorComJuros(ProdutoFinanceiro produtoFinanceiro, float valorDaTransferencia) throws ProdutoFinanceiroException {
+		
+		if(produtoFinanceiro.getValor() >= valorDaTransferencia) {
+			produtoFinanceiro.setValor(produtoFinanceiro.getValor() - (valorDaTransferencia * 1.1f));
+		}else {
+			throw new ProdutoFinanceiroException("Valor superior ao saldo, você possui: " +  produtoFinanceiro.getValor());
+		}
+	}
+	
 	private void descontarValor(ProdutoFinanceiro produtoFinanceiro, float valorSaque) throws ProdutoFinanceiroException {
 		
 		if(produtoFinanceiro.getValor() >= valorSaque) {
@@ -45,6 +74,10 @@ public class ProdutoFinanceiroService {
 		}else {
 			throw new ProdutoFinanceiroException("Valor superior ao saldo, você possui: " +  produtoFinanceiro.getValor());
 		}
+	}
+	
+	public void acrescentarValor(ProdutoFinanceiro produtoFinanceiro, float valorDaTransferencia){
+			produtoFinanceiro.setValor(produtoFinanceiro.getValor() +valorDaTransferencia);
 	}
 	
 	public ProdutoFinanceiro buscarPoupanca(Integer numeroConta, Integer agencia) throws NotFoundException, ProdutoFinanceiroException   {
@@ -70,7 +103,7 @@ public class ProdutoFinanceiroService {
 		
 		produto.setValor(produto.getValor() + valorDoDeposito);
 		produtoFinanceiroRepository.save(produto);
-		return "Deposito sucedido! Você possui: " + produto.getValor();
+		return MESAGEM_SUCESSO + produto.getValor();
 	}
 	
 	private ProdutoFinanceiro buscarProdutoFinanceiro(Integer numeroConta, Integer agencia , Integer tipoProdutoFinanceiro) throws NotFoundException, ProdutoFinanceiroException {

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.yaman.bank.DTO.ParamDepositarDTO;
 import br.com.yaman.bank.DTO.ParamSacarDTO;
+import br.com.yaman.bank.DTO.ParamTransferirDTO;
 import br.com.yaman.bank.entity.ProdutoFinanceiro;
 import br.com.yaman.bank.exception.NotFoundException;
 import br.com.yaman.bank.exception.ProdutoFinanceiroException;
@@ -52,5 +53,11 @@ public class BankController {
 	public ResponseEntity<String> sacar(@RequestBody ParamSacarDTO parametros) throws ProdutoFinanceiroException, NotFoundException {
 		return ResponseEntity.ok(produtoFinanceiroService.sacar(parametros));
 	}
+	
+	@PostMapping(value = "transferir")
+	public ResponseEntity<String> transferir(@RequestBody ParamTransferirDTO parametros) throws ProdutoFinanceiroException, NotFoundException{
+		return ResponseEntity.ok(produtoFinanceiroService.transferir(parametros));
+	}
+	
 }
 
