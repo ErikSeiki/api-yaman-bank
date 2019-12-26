@@ -55,7 +55,7 @@ public class BankController {
 	}
 	
 	@PostMapping(value = "transferir")
-	public ResponseEntity<String> transferir(@RequestBody ParamTransferirDTO parametros) throws ProdutoFinanceiroException{
+	public ResponseEntity<String> transferir(@RequestBody ParamTransferirDTO parametros) throws ProdutoFinanceiroException, NotFoundException{
 		return ResponseEntity.ok(produtoFinanceiroService.transferir(parametros));
 	}
 	
