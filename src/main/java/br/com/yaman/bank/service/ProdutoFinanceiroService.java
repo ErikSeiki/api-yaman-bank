@@ -19,7 +19,6 @@ public class ProdutoFinanceiroService {
 	@Autowired
 	private ProdutoFinanceiroRepository produtoFinanceiroRepository;
 	
-	
 	public String sacar(ParamSacarDTO parametros) throws ProdutoFinanceiroException, NotFoundException {
 		
 		Integer numeroConta = parametros.getNumeroConta();
@@ -27,18 +26,16 @@ public class ProdutoFinanceiroService {
 		Integer tipoProdutoFinanceiro = parametros.getTipoProdutoFinanceiro();
 		float valorDoSaque = parametros.getValorDoSaque();
 		
-		ProdutoFinanceiro produto = produtoFinanceiroRepository.buscarProdutoFinanceiro(agencia, numeroConta, tipoProdutoFinanceiro);
-		
 		if(valorDoSaque <= 0) {
 			throw new ProdutoFinanceiroException("Valor invalido");
 		}
+
+		ProdutoFinanceiro produto = this.buscarProdutoFinanceiro(numeroConta , agencia, tipoProdutoFinanceiro);
 		
-		else {
-			this.descontarValor(produto, valorDoSaque);
-			produtoFinanceiroRepository.save(produto);
-			return MESAGEM_SUCESSO + produto.getValor();
+		this.descontarValor(produto, valorDoSaque);
+		produtoFinanceiroRepository.save(produto);
+		return MESAGEM_SUCESSO + produto.getValor();
 		
-		}
 	}
 	
 	private void descontarValor(ProdutoFinanceiro produtoFinanceiro, float valorSaque) throws ProdutoFinanceiroException {
@@ -58,6 +55,24 @@ public class ProdutoFinanceiroService {
 		return buscarProdutoFinanceiro(numeroConta, agencia,TipoProdutoFinanceiro.CONTA_CORRENTE.getCod());
 	}
 
+	public String depositar(ParamDepositarDTO parametros) throws ProdutoFinanceiroException, NotFoundException {
+		Integer numeroConta = parametros.getNumeroConta();
+		Integer agencia = parametros.getAgencia();
+		Integer tipoProdutoFinanceiro = parametros.getTipoProdutoFinanceiro();
+		float valorDoDeposito = parametros.getValorDoDeposito();
+		
+		//Validações em primeiro lugar, assim evita processamento desnecessario
+		if(valorDoDeposito <= 0) {
+			throw new ProdutoFinanceiroException("Valor invalido");
+		}
+
+		ProdutoFinanceiro produto = this.buscarProdutoFinanceiro(numeroConta, agencia, tipoProdutoFinanceiro);
+		
+		produto.setValor(produto.getValor() + valorDoDeposito);
+		produtoFinanceiroRepository.save(produto);
+		return "Deposito sucedido! Você possui: " + produto.getValor();
+	}
+	
 	private ProdutoFinanceiro buscarProdutoFinanceiro(Integer numeroConta, Integer agencia , Integer tipoProdutoFinanceiro) throws NotFoundException, ProdutoFinanceiroException {
 		
 		if(numeroConta == null || agencia == null || tipoProdutoFinanceiro == null) {
@@ -66,7 +81,12 @@ public class ProdutoFinanceiroService {
 		
 		if (tipoProdutoFinanceiro == TipoProdutoFinanceiro.CONTA_POUPANCA.getCod() || 
 				tipoProdutoFinanceiro == TipoProdutoFinanceiro.CONTA_CORRENTE.getCod()) {
+			
 			ProdutoFinanceiro produto = produtoFinanceiroRepository.buscarProdutoFinanceiro(agencia, numeroConta, tipoProdutoFinanceiro);
+			
+			if(produto == null)
+				throw new NotFoundException("Não foi localizado produto financeiro para a agencia: [" + agencia + "] e conta: [" + numeroConta + "] ");
+			
 			return produto;
 		}
 		
@@ -74,22 +94,4 @@ public class ProdutoFinanceiroService {
 		
 		
 	}
-
-	public String depositar(ParamDepositarDTO parametros) throws ProdutoFinanceiroException, NotFoundException {
-		Integer numeroConta = parametros.getNumeroConta();
-		Integer agencia = parametros.getAgencia();
-		Integer tipoProdutoFinanceiro = parametros.getTipoProdutoFinanceiro();
-		float valorDoDeposito = parametros.getValorDoDeposito();
-		
-		ProdutoFinanceiro produto = this.buscarProdutoFinanceiro(numeroConta, agencia, tipoProdutoFinanceiro);
-		
-		if(valorDoDeposito <= 0) {
-			throw new ProdutoFinanceiroException("Valor invalido");
-		}
-		
-		produto.setValor(produto.getValor() + valorDoDeposito);
-		produtoFinanceiroRepository.save(produto);
-		return "Deposito sucedido! Você possui: " + produto.getValor();
-	}
-	
 }
