@@ -25,6 +25,13 @@ public class Transacao implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	public Transacao(String descricao, Float valor, ProdutoFinanceiro produtoFinanceiro) {
+		this.dataTransacao = new Date();
+		this.descricao = descricao;
+		this.valor = valor;
+		this.produtoFinanceiro = produtoFinanceiro;
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "TRANSACAO_ID")
@@ -40,7 +47,7 @@ public class Transacao implements Serializable {
 	private Float valor;
 	
 	@ManyToOne
-	@JoinColumn(name = "FK_PRODUTO_FINANCEIRO_ID", referencedColumnName = "PRODUTO_FINANCEIRO_ID", nullable = false)
+	@JoinColumn(name = "FK_PRODUTO_FINANCEIRO", referencedColumnName = "PRODUTO_FINANCEIRO_ID", nullable = false)
 	private ProdutoFinanceiro produtoFinanceiro;
 
 }

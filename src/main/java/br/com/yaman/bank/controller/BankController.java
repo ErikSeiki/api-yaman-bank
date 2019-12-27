@@ -1,6 +1,8 @@
 package br.com.yaman.bank.controller;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.yaman.bank.DTO.ParamDepositarDTO;
+import br.com.yaman.bank.DTO.ParamExtratoDTO;
 import br.com.yaman.bank.DTO.ParamSacarDTO;
 import br.com.yaman.bank.DTO.ParamTransferirDTO;
 import br.com.yaman.bank.entity.ProdutoFinanceiro;
+import br.com.yaman.bank.entity.Transacao;
 import br.com.yaman.bank.exception.NotFoundException;
 import br.com.yaman.bank.exception.ProdutoFinanceiroException;
 import br.com.yaman.bank.service.ProdutoFinanceiroService;
@@ -57,6 +61,11 @@ public class BankController {
 	@PostMapping(value = "transferir")
 	public ResponseEntity<String> transferir(@RequestBody ParamTransferirDTO parametros) throws ProdutoFinanceiroException, NotFoundException{
 		return ResponseEntity.ok(produtoFinanceiroService.transferir(parametros));
+	}
+	
+	@GetMapping(value = "exibir-extrato")
+	public ResponseEntity<List<Transacao>> exibirExtrato(@RequestParam ParamExtratoDTO parametros) throws NotFoundException, ProdutoFinanceiroException {
+		return ResponseEntity.ok(produtoFinanceiroService.exibirExtrato(parametros));
 	}
 	
 }
