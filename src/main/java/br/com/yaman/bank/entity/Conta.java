@@ -11,6 +11,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,12 +32,15 @@ public class Conta implements Serializable {
 
 	@Column(name = "SENHA", nullable = false)
 	private String senha;
-
+	
+	@JsonManagedReference
 	@ManyToOne
 	@JoinColumn(name = "FK_CLIENTE_ID", referencedColumnName = "CLIENTE_ID", nullable = false)
 	private Cliente cliente;
 
-	@OneToMany(mappedBy = "conta")
+	@JsonBackReference
+	@OneToMany(mappedBy = "conta") 
 	private List<ProdutoFinanceiro> produtosFinanceiros;
+	 
 
 }

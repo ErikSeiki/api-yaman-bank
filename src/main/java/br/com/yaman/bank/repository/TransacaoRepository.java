@@ -1,5 +1,6 @@
 package br.com.yaman.bank.repository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +14,6 @@ import br.com.yaman.bank.entity.Transacao;
 
 @Repository
 public interface TransacaoRepository extends JpaRepository<Transacao, Integer> {
-	@Query("select data_transacao, descricao, valor from transacao where data_transacao > :dataInicio and data_transacao < :dataFim and fk_produto_financeiro = :produtoFinanceiro")
-	public List<Transacao> buscaExtrato(@Param("dataInicio") Date dataInicio,@Param("dataFim") Date dataFim, @Param("produtoFinanceiro") Integer produtoFinanceiro);
+	@Query("select t from Transacao t where t.dataTransacao > :dataInicio and t.dataTransacao < :dataFim and t.produtoFinanceiro.produtoFinanceiroId = :produtoFinanceiro")
+	public List<Transacao> buscaExtrato(@Param("dataInicio") LocalDate dataInicio,@Param("dataFim") LocalDate dataFim, @Param("produtoFinanceiro") Integer produtoFinanceiro);
 }

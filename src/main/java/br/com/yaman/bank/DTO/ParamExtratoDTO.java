@@ -1,6 +1,8 @@
 package br.com.yaman.bank.DTO;
 
-import java.util.Date;
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +18,10 @@ public class ParamExtratoDTO {
 	private Integer numeroConta;
 	private Integer agencia;
 	private Integer tipoProdutoFinanceiro;
-	private Date dataInicio;
-	private Date dataFim;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate dataInicio;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate dataFim;
 }

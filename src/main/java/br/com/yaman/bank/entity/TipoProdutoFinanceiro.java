@@ -32,6 +32,4 @@ public class TipoProdutoFinanceiro implements Serializable {
 	@Column(name = "DESCRICAO",  nullable = false)
 	private String descricao;
 	
-	@OneToMany(mappedBy = "tipoProdutoFinanceiro")
-	private List<ProdutoFinanceiro> produtosFinanceiros;
 }

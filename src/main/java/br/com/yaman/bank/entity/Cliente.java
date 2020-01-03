@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,6 +43,8 @@ public class Cliente implements Serializable{
 	@Column(name = "ENDERECO",  nullable = false)
 	private String endereco;
 	
-	@OneToMany(mappedBy = "cliente")
+	@JsonBackReference
+	@OneToMany(mappedBy = "cliente") 
 	private List<Conta> contas;
+	 
 }

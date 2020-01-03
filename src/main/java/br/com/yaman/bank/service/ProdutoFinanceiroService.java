@@ -1,5 +1,6 @@
 package br.com.yaman.bank.service;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import br.com.yaman.bank.exception.NotFoundException;
 import br.com.yaman.bank.exception.ProdutoFinanceiroException;
 import br.com.yaman.bank.repository.ProdutoFinanceiroRepository;
 import br.com.yaman.bank.repository.TransacaoRepository;
+import br.com.yaman.bank.repositoryvo.TransacaoRepositoryVO;
+import br.com.yaman.bank.vo.TransacaoVO;
 
 @Service
 public class ProdutoFinanceiroService {
@@ -29,6 +32,9 @@ public class ProdutoFinanceiroService {
 	
 	@Autowired
 	private TransacaoRepository transacaoRepository;
+	
+	@Autowired
+	private TransacaoRepositoryVO transacaoRepositoryVO;
 	
 	public String sacar(ParamSacarDTO parametros) throws ProdutoFinanceiroException, NotFoundException {
 		
@@ -148,21 +154,23 @@ public class ProdutoFinanceiroService {
 		
 	}
 	
-	private List<Transacao> buscarExtrato(ProdutoFinanceiro produtoFinanceiro, Date dataInicio, Date dataFim) throws NotFoundException {
+	private List<Transacao> buscarExtrato(ProdutoFinanceiro produtoFinanceiro, LocalDate dataInicio, LocalDate dataFim) throws Exception {
 		if(produtoFinanceiro == null || dataInicio == null || dataFim == null) {
 			throw new NotFoundException("Informações Produto Financeiro ou Datas inválidos.");
 		}
 		
+		//List<Transacao> lista = transacaoRepositoryVO.buscaExtrato(dataInicio, dataFim, produtoFinanceiro.getProdutoFinanceiroId());
 		List<Transacao> lista = transacaoRepository.buscaExtrato(dataInicio, dataFim, produtoFinanceiro.getProdutoFinanceiroId());
+		System.out.println(new Date().toString());
 		return lista;
 	}
 
-	public List<Transacao> exibirExtrato(ParamExtratoDTO parametros) throws NotFoundException, ProdutoFinanceiroException {
+	public List<Transacao> exibirExtrato(ParamExtratoDTO parametros) throws Exception {
 		Integer numeroConta = parametros.getNumeroConta();
 		Integer agencia = parametros.getAgencia();
 		Integer tipoProdutoFinanceiro = parametros.getTipoProdutoFinanceiro();
-		Date dataInicio = parametros.getDataInicio();
-		Date dataFim = parametros.getDataFim();
+		LocalDate dataInicio = parametros.getDataInicio();
+		LocalDate dataFim = parametros.getDataFim();
 		
 		ProdutoFinanceiro produto = this.buscarProdutoFinanceiro(numeroConta, agencia, tipoProdutoFinanceiro);
 		List<Transacao> lista = this.buscarExtrato(produto, dataInicio, dataFim);

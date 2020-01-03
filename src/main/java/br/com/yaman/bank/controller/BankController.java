@@ -64,7 +64,7 @@ public class BankController {
 	}
 	
 	@GetMapping(value = "exibir-extrato")
-	public ResponseEntity<List<Transacao>> exibirExtrato(@RequestParam ParamExtratoDTO parametros) throws NotFoundException, ProdutoFinanceiroException {
+	public ResponseEntity<List<Transacao>> exibirExtrato(@RequestBody ParamExtratoDTO parametros) throws Exception {
 		return ResponseEntity.ok(produtoFinanceiroService.exibirExtrato(parametros));
 	}
 	
