@@ -19,8 +19,6 @@ import br.com.yaman.bank.exception.NotFoundException;
 import br.com.yaman.bank.exception.ProdutoFinanceiroException;
 import br.com.yaman.bank.repository.ProdutoFinanceiroRepository;
 import br.com.yaman.bank.repository.TransacaoRepository;
-import br.com.yaman.bank.repositoryvo.TransacaoRepositoryVO;
-import br.com.yaman.bank.vo.TransacaoVO;
 
 @Service
 public class ProdutoFinanceiroService {
@@ -32,9 +30,6 @@ public class ProdutoFinanceiroService {
 	
 	@Autowired
 	private TransacaoRepository transacaoRepository;
-	
-	@Autowired
-	private TransacaoRepositoryVO transacaoRepositoryVO;
 	
 	public String sacar(ParamSacarDTO parametros) throws ProdutoFinanceiroException, NotFoundException {
 		
