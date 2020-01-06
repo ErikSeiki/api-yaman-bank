@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.yaman.bank.DTO.TransacaoDTO;
 import br.com.yaman.bank.DTO.ParamDepositarDTO;
 import br.com.yaman.bank.DTO.ParamExtratoDTO;
 import br.com.yaman.bank.DTO.ParamSacarDTO;
 import br.com.yaman.bank.DTO.ParamTransferirDTO;
 import br.com.yaman.bank.entity.ProdutoFinanceiro;
-import br.com.yaman.bank.entity.Transacao;
 import br.com.yaman.bank.exception.NotFoundException;
 import br.com.yaman.bank.exception.ProdutoFinanceiroException;
 import br.com.yaman.bank.service.ProdutoFinanceiroService;
@@ -64,7 +64,7 @@ public class BankController {
 	}
 	
 	@GetMapping(value = "exibir-extrato")
-	public ResponseEntity<List<Transacao>> exibirExtrato(@RequestBody ParamExtratoDTO parametros) throws Exception {
+	public ResponseEntity<List<TransacaoDTO>> exibirExtrato(@RequestBody ParamExtratoDTO parametros) throws Exception {
 		return ResponseEntity.ok(produtoFinanceiroService.exibirExtrato(parametros));
 	}
 	

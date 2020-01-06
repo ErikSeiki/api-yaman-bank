@@ -1,12 +1,14 @@
 package br.com.yaman.bank.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.yaman.bank.DTO.TransacaoDTO;
 import br.com.yaman.bank.DTO.ParamDepositarDTO;
 import br.com.yaman.bank.DTO.ParamExtratoDTO;
 import br.com.yaman.bank.DTO.ParamSacarDTO;
@@ -17,6 +19,7 @@ import br.com.yaman.bank.entity.ProdutoFinanceiro;
 import br.com.yaman.bank.entity.Transacao;
 import br.com.yaman.bank.exception.NotFoundException;
 import br.com.yaman.bank.exception.ProdutoFinanceiroException;
+import br.com.yaman.bank.mapper.ExtratoMapper;
 import br.com.yaman.bank.repository.ProdutoFinanceiroRepository;
 import br.com.yaman.bank.repository.TransacaoRepository;
 
@@ -30,6 +33,9 @@ public class ProdutoFinanceiroService {
 	
 	@Autowired
 	private TransacaoRepository transacaoRepository;
+	
+	@Autowired
+	private ExtratoMapper extratoMapper;
 	
 	public String sacar(ParamSacarDTO parametros) throws ProdutoFinanceiroException, NotFoundException {
 		
@@ -154,13 +160,13 @@ public class ProdutoFinanceiroService {
 			throw new NotFoundException("Informações Produto Financeiro ou Datas inválidos.");
 		}
 		
-		//List<Transacao> lista = transacaoRepositoryVO.buscaExtrato(dataInicio, dataFim, produtoFinanceiro.getProdutoFinanceiroId());
+
 		List<Transacao> lista = transacaoRepository.buscaExtrato(dataInicio, dataFim, produtoFinanceiro.getProdutoFinanceiroId());
 		System.out.println(new Date().toString());
 		return lista;
 	}
 
-	public List<Transacao> exibirExtrato(ParamExtratoDTO parametros) throws Exception {
+	public List<TransacaoDTO> exibirExtrato(ParamExtratoDTO parametros) throws Exception {
 		Integer numeroConta = parametros.getNumeroConta();
 		Integer agencia = parametros.getAgencia();
 		Integer tipoProdutoFinanceiro = parametros.getTipoProdutoFinanceiro();
@@ -170,7 +176,7 @@ public class ProdutoFinanceiroService {
 		ProdutoFinanceiro produto = this.buscarProdutoFinanceiro(numeroConta, agencia, tipoProdutoFinanceiro);
 		List<Transacao> lista = this.buscarExtrato(produto, dataInicio, dataFim);
 		
-		return lista;
+		return extratoMapper.mapearComStream(lista);
 	}
 	
 }
