@@ -1,7 +1,6 @@
 package br.com.yaman.bank.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -173,6 +172,8 @@ public class ProdutoFinanceiroService {
 		LocalDate dataInicio = parametros.getDataInicio();
 		LocalDate dataFim = parametros.getDataFim();
 		
+		//em uma avaliação rapida talvez pudesse retornar apenas o id do produto financeiro
+		//pois o produto financeiro é carregado e no final só o id dele é usado
 		ProdutoFinanceiro produto = this.buscarProdutoFinanceiro(numeroConta, agencia, tipoProdutoFinanceiro);
 		List<Transacao> lista = this.buscarExtrato(produto, dataInicio, dataFim);
 		

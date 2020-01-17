@@ -63,6 +63,13 @@ public class BankController {
 		return ResponseEntity.ok(produtoFinanceiroService.transferir(parametros));
 	}
 	
+	/*
+	 * O metodo GET não deve usar corpo na sua requisição, o HTTP permite SIM que qualquer requisição tenha um corpo, mas não é boa pratica fazer isso com GET
+	 * O get tem que ser identificado pela sua URI logo os parametros de busca tem que ser passados por ela
+	 * Poderiamos ter problema por exemplo para cachear informações
+	 * Os proxies não procurarão no corpo GET para ver se os parâmetros têm impacto na resposta	
+	 * Como falei no primeiro topico do comentario, nada impede passar um corpo http no GET, e como esse corpo é usado apenas para filtro e NÃO para alterar o estado do servidor, vamos deixar como esta.
+	 */
 	@GetMapping(value = "exibir-extrato")
 	public ResponseEntity<List<TransacaoDTO>> exibirExtrato(@RequestBody ParamExtratoDTO parametros) throws Exception {
 		return ResponseEntity.ok(produtoFinanceiroService.exibirExtrato(parametros));
