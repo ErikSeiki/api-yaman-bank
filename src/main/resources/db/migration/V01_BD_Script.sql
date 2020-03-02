@@ -1,5 +1,3 @@
-create database yamanbank;
-use yamanbank;
 
 CREATE TABLE CLIENTE(
     CLIENTE_ID INTEGER NOT NULL SERIAL,
