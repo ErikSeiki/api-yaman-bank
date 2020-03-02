@@ -2,6 +2,8 @@ package br.com.yaman.bank.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +27,7 @@ import br.com.yaman.bank.entity.ProdutoFinanceiro;
 import br.com.yaman.bank.exception.NotFoundException;
 import br.com.yaman.bank.exception.ProdutoFinanceiroException;
 import br.com.yaman.bank.service.ProdutoFinanceiroService;
+import io.micrometer.core.ipc.http.HttpSender.Request;
 
 @RestController
 @RequestMapping(value = "/operacao")
@@ -55,7 +58,7 @@ public class BankController {
 		return ResponseEntity.ok(returnSaldo);
 	}
 
-	@PostMapping(value = "/depositar", consumes= {MediaType.APPLICATION_JSON_VALUE})
+	@PostMapping(value = "/depositar")
 	public ResponseEntity<String> depositar(@RequestBody ParamDepositarDTO parametros)
 			throws ProdutoFinanceiroException, NotFoundException {
 		return ResponseEntity.ok(produtoFinanceiroService.depositar(parametros));
@@ -72,7 +75,7 @@ public class BankController {
 			throws ProdutoFinanceiroException, NotFoundException {
 		return ResponseEntity.ok(produtoFinanceiroService.transferir(parametros));
 	}
-
+	
 	/*
 	 * O metodo GET não deve usar corpo na sua requisição, o HTTP permite SIM que
 	 * qualquer requisição tenha um corpo, mas não é boa pratica fazer isso com GET
