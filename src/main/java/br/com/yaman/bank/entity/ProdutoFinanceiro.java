@@ -23,12 +23,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "PRODUTO_FINANCEIRO")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class ProdutoFinanceiro implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "PRODUTO_FINANCEIRO_ID")
@@ -52,7 +52,7 @@ public class ProdutoFinanceiro implements Serializable {
 	@JsonBackReference
 	@OneToMany(mappedBy = "produtoFinanceiro") 
 	protected List<Transacao> transacoes;
-	
+
 	
 	
 }

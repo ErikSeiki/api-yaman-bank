@@ -7,13 +7,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.yaman.bank.DTO.TransacaoDTO;
 import br.com.yaman.bank.DTO.ParamDepositarDTO;
 import br.com.yaman.bank.DTO.ParamExtratoDTO;
+import br.com.yaman.bank.DTO.ParamLoginDTO;
 import br.com.yaman.bank.DTO.ParamSacarDTO;
 import br.com.yaman.bank.DTO.ParamTransferirDTO;
+import br.com.yaman.bank.DTO.TransacaoDTO;
 import br.com.yaman.bank.conta.TipoProdutoFinanceiro;
 import br.com.yaman.bank.conta.TipoTransacao;
+import br.com.yaman.bank.entity.Conta;
+import br.com.yaman.bank.entity.ContaPK;
 import br.com.yaman.bank.entity.ProdutoFinanceiro;
 import br.com.yaman.bank.entity.Transacao;
 import br.com.yaman.bank.exception.NotFoundException;
@@ -178,6 +181,13 @@ public class ProdutoFinanceiroService {
 		List<Transacao> lista = this.buscarExtrato(produto, dataInicio, dataFim);
 		
 		return extratoMapper.mapearComStream(lista);
+	}
+
+	public String logar(ParamLoginDTO parametros) throws Exception{
+		if(parametros.getAgencia() != 1234 || parametros.getNumeroConta() != 123456 || parametros.getSenha() != 123) {
+			throw new NotFoundException("Conta não exixtente");
+		}
+		return "Logado";
 	}
 	
 }
