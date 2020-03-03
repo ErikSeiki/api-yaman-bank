@@ -102,8 +102,7 @@ public class BankController {
 		return ResponseEntity.ok(produtoFinanceiroService.exibirExtrato(parametros));
 	}
 
-	@PostMapping(value = "/login") public ResponseEntity<String>
-	logar(@RequestBody ParamLoginDTO parametros) throws Exception { 
+	@PostMapping(value = "/login") public ResponseEntity<Boolean> logar(@RequestBody ParamLoginDTO parametros) throws Exception { 
 		return ResponseEntity.ok(produtoFinanceiroService.logar(parametros)); 
 	}
 

@@ -3,6 +3,7 @@ package br.com.yaman.bank.service;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import br.com.yaman.bank.entity.Transacao;
 import br.com.yaman.bank.exception.NotFoundException;
 import br.com.yaman.bank.exception.ProdutoFinanceiroException;
 import br.com.yaman.bank.mapper.ExtratoMapper;
+import br.com.yaman.bank.repository.ContaRepository;
 import br.com.yaman.bank.repository.ProdutoFinanceiroRepository;
 import br.com.yaman.bank.repository.TransacaoRepository;
 
@@ -38,6 +40,9 @@ public class ProdutoFinanceiroService {
 	
 	@Autowired
 	private ExtratoMapper extratoMapper;
+	
+	@Autowired
+	private ContaRepository contaRepository;
 	
 	public String sacar(ParamSacarDTO parametros) throws ProdutoFinanceiroException, NotFoundException {
 		
@@ -183,11 +188,19 @@ public class ProdutoFinanceiroService {
 		return extratoMapper.mapearComStream(lista);
 	}
 
-	public String logar(ParamLoginDTO parametros) throws Exception{
-		if(parametros.getAgencia() != 1234 || parametros.getNumeroConta() != 123456 || parametros.getSenha() != 123) {
-			throw new NotFoundException("Conta não exixtente");
+	public Boolean logar(ParamLoginDTO parametros) throws Exception{
+		Integer numeroConta = parametros.getNumeroConta();
+		Integer agencia = parametros.getAgencia();
+		String  senha = parametros.getSenha();
+		Optional<Conta> contaOptional = contaRepository.findById(new ContaPK(numeroConta, agencia));
+		if(contaOptional.isPresent())
+		{
+			Conta conta = contaOptional.orElse(new Conta());
+			if(senha.equals(conta.getSenha())) {
+				return true;
+			}
 		}
-		return "Logado";
+		return false;
 	}
 	
 }

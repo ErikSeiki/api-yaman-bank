@@ -17,5 +17,5 @@ import lombok.Setter;
 public class ParamLoginDTO {
 	private Integer numeroConta;
 	private Integer agencia;
-	private Integer senha;	
+	private String senha;	
 }
