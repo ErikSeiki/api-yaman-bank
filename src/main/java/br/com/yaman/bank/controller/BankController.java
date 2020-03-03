@@ -23,6 +23,7 @@ import br.com.yaman.bank.DTO.ParamSacarDTO;
 import br.com.yaman.bank.DTO.ParamTransferirDTO;
 import br.com.yaman.bank.DTO.ReturnSaldoContaCorrenteDTO;
 import br.com.yaman.bank.DTO.ReturnSaldoContaPoupancaDTO;
+import br.com.yaman.bank.DTO.ReturnSaldoDTO;
 import br.com.yaman.bank.entity.ProdutoFinanceiro;
 import br.com.yaman.bank.exception.NotFoundException;
 import br.com.yaman.bank.exception.ProdutoFinanceiroException;
@@ -40,6 +41,16 @@ public class BankController {
 	public ResponseEntity<String> getVersao() {
 		return new ResponseEntity<String>("1.0.0", HttpStatus.OK);
 	}
+	
+	@GetMapping(value = "/buscar-saldo")
+	public ResponseEntity<ReturnSaldoDTO> exibirSaldo(@RequestParam Integer numeroConta, Integer agencia)
+			throws NotFoundException, ProdutoFinanceiroException {
+		ProdutoFinanceiro produtoPoupanca = produtoFinanceiroService.buscarPoupanca(numeroConta, agencia);
+		ProdutoFinanceiro produtoCorrente = produtoFinanceiroService.buscarCorrente(numeroConta, agencia);
+		ReturnSaldoDTO returnSaldo = new ReturnSaldoDTO(produtoCorrente.getValor(), produtoPoupanca.getValor()); 
+		return ResponseEntity.ok(returnSaldo);
+	}
+	
 
 	@GetMapping(value = "/buscar-saldo-poupanca")
 	public ResponseEntity<ReturnSaldoContaPoupancaDTO> exibirSaldoPoupanca(@RequestParam Integer numeroConta, Integer agencia)
