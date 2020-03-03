@@ -11,7 +11,7 @@
 	<groupId>br.com.yaman</groupId>
 	<artifactId>bank</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>bank</name>
 	<description>Projeto de estagio</description>
 
