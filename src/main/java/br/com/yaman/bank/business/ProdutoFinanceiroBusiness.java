@@ -116,6 +116,9 @@ public class ProdutoFinanceiroBusiness {
 		float valorPoupanca;
 		ProdutoFinanceiro produtoPoupanca = buscarAmbosProdutoFinanceiro(numeroConta, agencia,TipoProdutoFinanceiro.CONTA_POUPANCA.getCod());
 		ProdutoFinanceiro produtoCorrente = buscarAmbosProdutoFinanceiro(numeroConta, agencia,TipoProdutoFinanceiro.CONTA_CORRENTE.getCod());
+		if(produtoCorrente == null && produtoPoupanca == null) {
+			throw new NotFoundException("Não foi localizado produto financeiro para a agencia: [" + agencia + "] e conta: [" + numeroConta + "] ");
+		}
 		if(produtoCorrente == null) {
 			valorCorrente = 0;
 		}else {
@@ -226,7 +229,8 @@ public class ProdutoFinanceiroBusiness {
 				return new ReturnLoginDTO(true);
 			}
 		}
-		return new ReturnLoginDTO(false);
+		
+		throw new NotFoundException("Conta Invalido");
 	}
 
 	public ReturnPerfilDTO buscarPerfil(Integer numeroConta, Integer agencia ) throws NotFoundException {
@@ -238,7 +242,7 @@ public class ProdutoFinanceiroBusiness {
 			ReturnPerfilDTO clienteDto = new ReturnPerfilDTO(cliente.getClienteId(), cliente.getNome(), cliente.getCpf(), cliente.getEmail(), "(00) 0000-0000" ,cliente.getEndereco());
 			return clienteDto;
 		}
-		throw new NotFoundException("");
+		throw new NotFoundException("Perfil Não Encontrado");
 		
 	}
 	
