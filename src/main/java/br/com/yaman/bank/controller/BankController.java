@@ -2,11 +2,10 @@ package br.com.yaman.bank.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,26 +15,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.yaman.bank.DTO.TransacaoDTO;
+import br.com.yaman.bank.business.ProdutoFinanceiroBusiness;
 import br.com.yaman.bank.DTO.ParamDepositarDTO;
 import br.com.yaman.bank.DTO.ParamExtratoDTO;
 import br.com.yaman.bank.DTO.ParamLoginDTO;
 import br.com.yaman.bank.DTO.ParamSacarDTO;
 import br.com.yaman.bank.DTO.ParamTransferirDTO;
+import br.com.yaman.bank.DTO.ReturnDepositarDTO;
+import br.com.yaman.bank.DTO.ReturnLoginDTO;
+import br.com.yaman.bank.DTO.ReturnPerfilDTO;
+import br.com.yaman.bank.DTO.ReturnSacarDTO;
 import br.com.yaman.bank.DTO.ReturnSaldoContaCorrenteDTO;
 import br.com.yaman.bank.DTO.ReturnSaldoContaPoupancaDTO;
 import br.com.yaman.bank.DTO.ReturnSaldoDTO;
+import br.com.yaman.bank.DTO.ReturnTransferirDTO;
 import br.com.yaman.bank.entity.ProdutoFinanceiro;
 import br.com.yaman.bank.exception.NotFoundException;
 import br.com.yaman.bank.exception.ProdutoFinanceiroException;
-import br.com.yaman.bank.service.ProdutoFinanceiroService;
-import io.micrometer.core.ipc.http.HttpSender.Request;
 
 @RestController
 @RequestMapping(value = "/operacao")
 public class BankController {
 
 	@Autowired
-	private ProdutoFinanceiroService produtoFinanceiroService;
+	private ProdutoFinanceiroBusiness produtoFinanceiroBusiness;
 
 	@GetMapping(value = "/buscar-versao")
 	public ResponseEntity<String> getVersao() {
@@ -45,46 +48,39 @@ public class BankController {
 	@GetMapping(value = "/buscar-saldo")
 	public ResponseEntity<ReturnSaldoDTO> exibirSaldo(@RequestParam Integer numeroConta, Integer agencia)
 			throws NotFoundException, ProdutoFinanceiroException {
-		ProdutoFinanceiro produtoPoupanca = produtoFinanceiroService.buscarPoupanca(numeroConta, agencia);
-		ProdutoFinanceiro produtoCorrente = produtoFinanceiroService.buscarCorrente(numeroConta, agencia);
-		ReturnSaldoDTO returnSaldo = new ReturnSaldoDTO(produtoCorrente.getValor(), produtoPoupanca.getValor()); 
-		return ResponseEntity.ok(returnSaldo);
+		return ResponseEntity.ok(produtoFinanceiroBusiness.buscarSaldo(numeroConta, agencia));
 	}
 	
 
 	@GetMapping(value = "/buscar-saldo-poupanca")
 	public ResponseEntity<ReturnSaldoContaPoupancaDTO> exibirSaldoPoupanca(@RequestParam Integer numeroConta, Integer agencia)
 			throws NotFoundException, ProdutoFinanceiroException {
-		ProdutoFinanceiro produto = produtoFinanceiroService.buscarPoupanca(numeroConta, agencia);
-		ReturnSaldoContaPoupancaDTO returnSaldo = new ReturnSaldoContaPoupancaDTO(produto.getValor()); 
-		return ResponseEntity.ok(returnSaldo);
+		return ResponseEntity.ok(produtoFinanceiroBusiness.buscarPoupanca(numeroConta, agencia));
 
 	}
 
 	@GetMapping(value = "/buscar-saldo-corrente")
 	public ResponseEntity<ReturnSaldoContaCorrenteDTO> exibirSaldoCorrente(@RequestParam Integer numeroConta, Integer agencia)
 			throws NotFoundException, ProdutoFinanceiroException {
-		ProdutoFinanceiro produto = produtoFinanceiroService.buscarCorrente(numeroConta, agencia);
-		ReturnSaldoContaCorrenteDTO returnSaldo = new ReturnSaldoContaCorrenteDTO(produto.getValor()); 
-		return ResponseEntity.ok(returnSaldo);
+		return ResponseEntity.ok(produtoFinanceiroBusiness.buscarCorrente(numeroConta, agencia));
 	}
 
 	@PostMapping(value = "/depositar")
-	public ResponseEntity<String> depositar(@RequestBody ParamDepositarDTO parametros)
+	public ResponseEntity<ReturnDepositarDTO> depositar(@RequestBody ParamDepositarDTO parametros)
 			throws ProdutoFinanceiroException, NotFoundException {
-		return ResponseEntity.ok(produtoFinanceiroService.depositar(parametros));
+		return ResponseEntity.ok(produtoFinanceiroBusiness.depositar(parametros));
 	}
 
 	@PostMapping(value = "/sacar")
-	public ResponseEntity<String> sacar(@RequestBody ParamSacarDTO parametros)
+	public ResponseEntity<ReturnSacarDTO> sacar(@RequestBody ParamSacarDTO parametros)
 			throws ProdutoFinanceiroException, NotFoundException {
-		return ResponseEntity.ok(produtoFinanceiroService.sacar(parametros));
+		return ResponseEntity.ok(produtoFinanceiroBusiness.sacar(parametros));
 	}
 
 	@PostMapping(value = "/transferir")
-	public ResponseEntity<String> transferir(@RequestBody ParamTransferirDTO parametros)
+	public ResponseEntity<ReturnTransferirDTO> transferir(@RequestBody ParamTransferirDTO parametros)
 			throws ProdutoFinanceiroException, NotFoundException {
-		return ResponseEntity.ok(produtoFinanceiroService.transferir(parametros));
+		return ResponseEntity.ok(produtoFinanceiroBusiness.transferir(parametros));
 	}
 	
 	/*
@@ -99,11 +95,18 @@ public class BankController {
 	 */
 	@GetMapping(value = "/exibir-extrato")
 	public ResponseEntity<List<TransacaoDTO>> exibirExtrato(@RequestBody ParamExtratoDTO parametros) throws Exception {
-		return ResponseEntity.ok(produtoFinanceiroService.exibirExtrato(parametros));
+		return ResponseEntity.ok(produtoFinanceiroBusiness.exibirExtrato(parametros));
 	}
 
-	@PostMapping(value = "/login") public ResponseEntity<Boolean> logar(@RequestBody ParamLoginDTO parametros) throws Exception { 
-		return ResponseEntity.ok(produtoFinanceiroService.logar(parametros)); 
+	@PostMapping(value = "/login")
+	public ResponseEntity<ReturnLoginDTO> logar(@RequestParam Integer numeroConta,Integer agencia, String senha) throws Exception { 
+		return ResponseEntity.ok(produtoFinanceiroBusiness.logar(new ParamLoginDTO(numeroConta, agencia, senha))); 
 	}
-
+	
+	@GetMapping(value = "/perfil")
+	public ResponseEntity<ReturnPerfilDTO> buscarPerfil(@RequestParam Integer numeroConta, Integer agencia)
+			throws NotFoundException, ProdutoFinanceiroException {
+		return ResponseEntity.ok(produtoFinanceiroBusiness.buscarPerfil(numeroConta, agencia));
+	}
+	
 }
