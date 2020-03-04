@@ -79,7 +79,7 @@ public class ProdutoFinanceiroBusiness {
 		ProdutoFinanceiro remetenteProdutoFinanceiro = this.buscarProdutoFinanceiro(parametros.getRemetenteNumeroConta(),parametros.getRemetenteAgencia(),parametros.getRemetenteTipoProdutoFinanceiro());
 		ProdutoFinanceiro destinatarioProdutoFinanceiro = this.buscarProdutoFinanceiro(parametros.getDestinatarioNumeroConta(),parametros.getDestinatarioAgencia(),parametros.getDestinatarioTipoProdutoFinanceiro());
 		
-		this.descontarValorComJuros(remetenteProdutoFinanceiro, parametros.getValorDaTransferencia());
+		this.descontarValor(remetenteProdutoFinanceiro, parametros.getValorDaTransferencia());
 		this.acrescentarValor(destinatarioProdutoFinanceiro, parametros.getValorDaTransferencia() );
 		produtoFinanceiroService.alterarProdutoFinanceiro(remetenteProdutoFinanceiro);
 		produtoFinanceiroService.alterarProdutoFinanceiro(destinatarioProdutoFinanceiro);
