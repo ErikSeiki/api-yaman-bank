@@ -79,6 +79,13 @@ public class ProdutoFinanceiroBusiness {
 		ProdutoFinanceiro remetenteProdutoFinanceiro = this.buscarProdutoFinanceiro(parametros.getRemetenteNumeroConta(),parametros.getRemetenteAgencia(),parametros.getRemetenteTipoProdutoFinanceiro());
 		ProdutoFinanceiro destinatarioProdutoFinanceiro = this.buscarProdutoFinanceiro(parametros.getDestinatarioNumeroConta(),parametros.getDestinatarioAgencia(),parametros.getDestinatarioTipoProdutoFinanceiro());
 		
+		if(destinatarioProdutoFinanceiro == null) {
+			throw new NotFoundException("Destinatario Invalido");
+		}
+		if(remetenteProdutoFinanceiro == null) {
+			throw new NotFoundException("Remetente Invalido");
+		}
+		
 		this.descontarValor(remetenteProdutoFinanceiro, parametros.getValorDaTransferencia());
 		this.acrescentarValor(destinatarioProdutoFinanceiro, parametros.getValorDaTransferencia() );
 		produtoFinanceiroService.alterarProdutoFinanceiro(remetenteProdutoFinanceiro);
