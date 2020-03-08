@@ -1,10 +1,13 @@
 package br.com.yaman.bank.controller;
 
+import java.text.DateFormat;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.yaman.bank.DTO.TransacaoDTO;
 import br.com.yaman.bank.business.ProdutoFinanceiroBusiness;
@@ -106,7 +111,13 @@ public class BankController {
 	 * filtro e NÃO para alterar o estado do servidor, vamos deixar como esta.
 	 */
 	@GetMapping(value = "/exibir-extrato")
-	public ResponseEntity<List<TransacaoDTO>> exibirExtrato(@RequestBody ParamExtratoDTO parametros) throws Exception {
+	public ResponseEntity<List<TransacaoDTO>> exibirExtrato(@RequestParam Integer numeroConta, Integer agencia, Integer tipoProdutoFinanceiro,
+			@DateTimeFormat(pattern = "yyyy-MM-dd")
+			LocalDate dataInicio,
+			@DateTimeFormat(pattern ="yyyy-MM-dd")
+			LocalDate dataFim 
+			) throws Exception {
+		ParamExtratoDTO parametros = new ParamExtratoDTO(numeroConta, agencia, tipoProdutoFinanceiro, dataInicio, dataFim);
 		return ResponseEntity.ok(produtoFinanceiroBusiness.exibirExtrato(parametros));
 	}
 
