@@ -72,6 +72,14 @@ public class ProdutoFinanceiroBusiness {
 	
 	
 	public ReturnTransferirDTO transferir(ParamTransferirDTO parametros) throws ProdutoFinanceiroException, NotFoundException {		
+		
+		if(parametros.getDestinatarioAgencia().equals(parametros.getRemetenteAgencia()) && 
+				parametros.getDestinatarioNumeroConta().equals(parametros.getRemetenteNumeroConta()) && 
+				parametros.getDestinatarioTipoProdutoFinanceiro().equals(parametros.getRemetenteTipoProdutoFinanceiro())) {
+			throw new ProdutoFinanceiroException("Não é possivel transferir para mesma conta");
+		}
+		
+		
 		if(parametros.getValorDaTransferencia() <= 0) {
 			throw new ProdutoFinanceiroException("Valor invalido");
 		}
