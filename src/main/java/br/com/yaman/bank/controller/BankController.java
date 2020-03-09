@@ -51,46 +51,49 @@ public class BankController {
 	}
 	
 	@GetMapping(value = "/buscar-saldo")
-	public ResponseEntity<ReturnSaldoDTO> exibirSaldo(@RequestParam Integer numeroConta, Integer agencia)
-			throws NotFoundException, ProdutoFinanceiroException {
+	public ResponseEntity<ReturnSaldoDTO> exibirSaldo(@RequestParam Integer numeroConta,
+													  @RequestParam Integer agencia
+													  ) throws NotFoundException, ProdutoFinanceiroException {
 		return ResponseEntity.ok(produtoFinanceiroBusiness.buscarSaldo(numeroConta, agencia));
 	}
 	
 
 	@GetMapping(value = "/buscar-saldo-poupanca")
-	public ResponseEntity<ReturnSaldoContaPoupancaDTO> exibirSaldoPoupanca(@RequestParam Integer numeroConta, Integer agencia)
-			throws NotFoundException, ProdutoFinanceiroException {
+	public ResponseEntity<ReturnSaldoContaPoupancaDTO> exibirSaldoPoupanca(@RequestParam Integer numeroConta,
+																			@RequestParam Integer agencia
+																			)throws NotFoundException, ProdutoFinanceiroException {
 		return ResponseEntity.ok(produtoFinanceiroBusiness.buscarPoupanca(numeroConta, agencia));
 
 	}
 
 	@GetMapping(value = "/buscar-saldo-corrente")
-	public ResponseEntity<ReturnSaldoContaCorrenteDTO> exibirSaldoCorrente(@RequestParam Integer numeroConta, Integer agencia)
-			throws NotFoundException, ProdutoFinanceiroException {
+	public ResponseEntity<ReturnSaldoContaCorrenteDTO> exibirSaldoCorrente(@RequestParam Integer numeroConta, 
+																		   @RequestParam Integer agencia
+																		   ) throws NotFoundException, ProdutoFinanceiroException {
 		return ResponseEntity.ok(produtoFinanceiroBusiness.buscarCorrente(numeroConta, agencia));
 	}
 
 	@PostMapping(value = "/depositar")
-	public ResponseEntity<ReturnDepositarDTO> depositar(@RequestBody ParamDepositarDTO parametros)
-			throws ProdutoFinanceiroException, NotFoundException {
+	public ResponseEntity<ReturnDepositarDTO> depositar(@RequestBody ParamDepositarDTO parametros
+														)throws ProdutoFinanceiroException, NotFoundException {
 		return ResponseEntity.ok(produtoFinanceiroBusiness.depositar(parametros));
 	}
 
 	@PostMapping(value = "/sacar")
-	public ResponseEntity<ReturnSacarDTO> sacar(@RequestBody ParamSacarDTO parametros)
-			throws ProdutoFinanceiroException, NotFoundException {
+	public ResponseEntity<ReturnSacarDTO> sacar(@RequestBody ParamSacarDTO parametros
+												)throws ProdutoFinanceiroException, NotFoundException {
 		return ResponseEntity.ok(produtoFinanceiroBusiness.sacar(parametros));
 	}
 
 	@PostMapping(value = "/transferir")
 	public ResponseEntity<ReturnTransferirDTO> transferir(@RequestParam Integer remetenteNumeroConta,
-																	 Integer remetenteAgencia,
-																	 Integer remetenteTipoProdutoFinanceiro,
-																	 Integer destinatarioNumeroConta,
-																	 Integer destinatarioAgencia,
-																	 Integer destinatarioTipoProdutoFinanceiro,
-																	 float valorDaTransferencia)
-			throws ProdutoFinanceiroException, NotFoundException {
+														  @RequestParam Integer remetenteAgencia,
+														  @RequestParam Integer remetenteTipoProdutoFinanceiro,
+														  @RequestParam Integer destinatarioNumeroConta,
+														  @RequestParam Integer destinatarioAgencia,
+														  @RequestParam Integer destinatarioTipoProdutoFinanceiro,
+														  @RequestParam float valorDaTransferencia
+														  ) throws ProdutoFinanceiroException, NotFoundException {
 		return ResponseEntity.ok(produtoFinanceiroBusiness.transferir(new ParamTransferirDTO(remetenteNumeroConta, 
 				remetenteAgencia,
 				remetenteTipoProdutoFinanceiro,
@@ -111,24 +114,27 @@ public class BankController {
 	 * filtro e NÃO para alterar o estado do servidor, vamos deixar como esta.
 	 */
 	@GetMapping(value = "/exibir-extrato")
-	public ResponseEntity<List<TransacaoDTO>> exibirExtrato(@RequestParam Integer numeroConta, Integer agencia, Integer tipoProdutoFinanceiro,
-			@DateTimeFormat(pattern = "yyyy-MM-dd")
-			LocalDate dataInicio,
-			@DateTimeFormat(pattern ="yyyy-MM-dd")
-			LocalDate dataFim 
-			) throws Exception {
+	public ResponseEntity<List<TransacaoDTO>> exibirExtrato(@RequestParam Integer numeroConta,
+															@RequestParam Integer agencia,
+															@RequestParam Integer tipoProdutoFinanceiro,
+															@DateTimeFormat(pattern = "yyyy-MM-dd") @RequestParam LocalDate dataInicio,
+															@DateTimeFormat(pattern ="yyyy-MM-dd") @RequestParam LocalDate dataFim 
+															) throws Exception {
 		ParamExtratoDTO parametros = new ParamExtratoDTO(numeroConta, agencia, tipoProdutoFinanceiro, dataInicio, dataFim);
 		return ResponseEntity.ok(produtoFinanceiroBusiness.exibirExtrato(parametros));
 	}
 
 	@PostMapping(value = "/login")
-	public ResponseEntity<ReturnLoginDTO> logar(@RequestParam Integer numeroConta,Integer agencia, String senha) throws Exception { 
+	public ResponseEntity<ReturnLoginDTO> logar(@RequestParam Integer numeroConta,
+												@RequestParam Integer agencia,
+												@RequestParam String senha) throws Exception { 
 		return ResponseEntity.ok(produtoFinanceiroBusiness.logar(new ParamLoginDTO(numeroConta, agencia, senha))); 
 	}
 	
 	@GetMapping(value = "/perfil")
-	public ResponseEntity<ReturnPerfilDTO> buscarPerfil(@RequestParam Integer numeroConta, Integer agencia)
-			throws NotFoundException, ProdutoFinanceiroException {
+	public ResponseEntity<ReturnPerfilDTO> buscarPerfil(@RequestParam Integer numeroConta, 
+														@RequestParam Integer agencia
+														) throws NotFoundException, ProdutoFinanceiroException {
 		return ResponseEntity.ok(produtoFinanceiroBusiness.buscarPerfil(numeroConta, agencia));
 	}
 	
